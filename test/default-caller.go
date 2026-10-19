@@ -1,4 +1,4 @@
-package test
+package main
 
 import (
 	"fmt"
@@ -8,25 +8,29 @@ import (
 
 func main() {
 
-	// time starts
-	timerStart := time.Now()
+	// websites list
+	web := []string{"https://google.com", "https://youtube.com"}
 
-	// call the website
-	fmt.Println("Server - goole-test")
-	callback, err := http.Get("https://google.com")
+	for _, url := range web {
 
-	// error checker
-	if err != nil {
-		fmt.Printf("Site Down\n")
-		return
+		timerStart := time.Now()
+
+		callback, err := http.Get(url)
+
+		// error checker
+		if err != nil {
+			fmt.Printf("Site Down\n")
+			continue
+		}
+
+		// close the call
+		callback.Body.Close()
+
+		timerEnd := time.Since(timerStart).Milliseconds()
+
+		// Print out
+		fmt.Println("Server -", url)
+		fmt.Println("Status Code:", callback.StatusCode)
+		fmt.Println("TIme taken:", timerEnd, "ms")
 	}
-
-	// close the call
-	callback.Body.Close()
-
-	// timer ends
-	timerEnd := time.Since(timerStart).Milliseconds()
-
-	fmt.Println("Status Code:", callback.StatusCode)
-	fmt.Println("TIme taken:", timerEnd, "ms")
 }
